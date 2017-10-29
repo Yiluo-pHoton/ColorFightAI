@@ -67,6 +67,7 @@ if __name__ == '__main__':
         diagonal_dirs = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
 
         while (cur_x < g.width and cur_y < g.height):
+            print(cur_x, cur_y, "IN WHILE")
             is_adjacent = False
             this_cell = g.GetCell(cur_x, cur_y)
             this_cell_val = (4 / this_cell.takeTime)
@@ -130,7 +131,6 @@ if __name__ == '__main__':
                 last_attack_time = datetime.datetime.now()
                 print("highest val", highest_val)
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
-
 
         action_index = (action_index + 1) % 2
         current_action = ACTION_ARRAY[action_index]

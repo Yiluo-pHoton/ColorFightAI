@@ -2,6 +2,7 @@
 import colorfight
 import random
 import datetime
+import math
 
 class Actions:
     DO_NOTHING = 0
@@ -17,15 +18,22 @@ class CellStatus:
 
 
 if __name__ == '__main__':
-    ACTION_ARRAY = [Actions.DO_NOTHING, Actions.DO_NOTHING]
+    ACTION_ARRAY = [Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.EVAL,
+                    Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.SORT]
     action_index = 0
     current_action = ACTION_ARRAY[action_index]
-    raw_array = []
+    evaled_cells = {}
+    sorted_cells = []
+    pre_dist_to_global_high = 60
+    cur_dist_to_global_high = 60
+
+    # Last attacked cell information
     last_attack_time = datetime.datetime.now()
     last_attack_cell = ()
 
     # Defense variables
     border_cells = []
+    my_coor = []
 
     # Instantiate a Game object.
     g = colorfight.Game()
@@ -35,24 +43,33 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-    g.JoinGame('pHoton_0')
+    g.JoinGame('geekowl')
     # Put you logic in a while True loop so it will run forever until you
     # manually stop the game
 
-    def eval_all_cells():
-        return "stub"
+    def eval_this_cell_global(cur_x, cur_y):
+        this_cell_global_val = 0
+        for x in range(cur_x - 3, cur_x + 3):
+            for y in range(cur_y - 3, cur_y + 3):
+                this_cell = g.GetCell(x, y)
+                neighbors = set()
+
+                if this_cell.owner != g.uid:
+                    if this_cell.owner == 0:
+                        this_cell_global_val -= 2
+                    else:
+                        if this_cell.owner in neighbors:
+                            this_cell_global_val += 1
+                        this_cell_global_val -= this_cell.takeTime
+        evaled_cells[(cur_x, cur_y)] = this_cell_global_val
 
     def sort_all_eval():
-        return "stub"
+        sorted_cells = sorted(evaled_cells, key=evaled_cells.get, reverse=True)
 
     while True:
-        # This is the step to evaluate all the cell status for a global view
-        if current_action == Actions.EVAL:
-            eval_all_cells()
-
         # This is the step to sort from high to low the value of cells
         elif current_action == Actions.SORT:
-            sortAll()
+            sort_all_eval()
 
         # Now carry out the attack
         # Go through the array of cells, evaluate, and search for a highest value
@@ -67,21 +84,32 @@ if __name__ == '__main__':
         diagonal_dirs = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
 
         while (cur_x < g.width and cur_y < g.height):
+            if current_action == Actions.EVAL:
+                eval_this_cell_global(cur_x, cur_y)
+                my_coor = []
+
             is_adjacent = False
             this_cell = g.GetCell(cur_x, cur_y)
+            this_cell_val = (4 / this_cell.takeTime)
             if this_cell.owner == 0:
                 this_cell_val += 1
-            this_cell_val = (4 / this_cell.takeTime)
+            else:
+                this_cell_val -= this_cell.takeTime / 3
 
             if not this_cell.owner == g.uid:
                 neighbors = set()
+                for i in range(5):
+                    dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
+                    if  dist < pre_dist_to_global_high:
+                        this_cell_val += 4 * math.e ** (- 0.1 * (dist - 8) ** 2)
+                        pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
                     if not sur_c == None:
                         if sur_c.owner == g.uid:
                             is_adjacent = True
-                            this_cell_val += 4
+                            this_cell_val += ((g.currTime - sur_c.occupyTime) / 30)
                         elif sur_c.owner == 0:
                             this_cell_val += 2
                         else:
@@ -107,9 +135,9 @@ if __name__ == '__main__':
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 3.3
-
-                now = datetime.datetime.now()
-                timedelta = (now - last_attack_time).total_seconds()
+                else:
+                    this_cell_val -= (this_cell.takeTime * 3)
+                    my_coor += [(cur_x, cur_y)]
 
             if this_cell_val > highest_val and is_adjacent and not this_cell.owner == g.uid:
                 highest_val = this_cell_val
@@ -127,7 +155,6 @@ if __name__ == '__main__':
                 last_attack_time = datetime.datetime.now()
                 print("highest val", highest_val)
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
-
 
         action_index = (action_index + 1) % 2
         current_action = ACTION_ARRAY[action_index]

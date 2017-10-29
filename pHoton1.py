@@ -17,7 +17,7 @@ class CellStatus:
 
 
 if __name__ == '__main__':
-    ACTION_ARRAY = [Actions.DO_NOTHING, Actions.DO_NOTHING]
+    ACTION_ARRAY = [Actions.DO_NOTHING, Actions.EVAL, Actions.DO_NOTHING, Actions.SORT]
     action_index = 0
     current_action = ACTION_ARRAY[action_index]
     raw_array = []
@@ -69,9 +69,12 @@ if __name__ == '__main__':
         while (cur_x < g.width and cur_y < g.height):
             is_adjacent = False
             this_cell = g.GetCell(cur_x, cur_y)
+            this_cell_val = (4 / this_cell.takeTime)
             if this_cell.owner == 0:
                 this_cell_val += 1
-            this_cell_val = (4 / this_cell.takeTime)
+            else:
+                this_cell_val -= this_cell.takeTime / 3
+
 
             if not this_cell.owner == g.uid:
                 neighbors = set()
@@ -81,7 +84,7 @@ if __name__ == '__main__':
                     if not sur_c == None:
                         if sur_c.owner == g.uid:
                             is_adjacent = True
-                            this_cell_val += 4
+                            this_cell_val += ((g.currTime - sur_c.occupyTime) / 30)
                         elif sur_c.owner == 0:
                             this_cell_val += 2
                         else:

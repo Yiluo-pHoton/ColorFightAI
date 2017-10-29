@@ -67,7 +67,6 @@ if __name__ == '__main__':
         diagonal_dirs = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
 
         while (cur_x < g.width and cur_y < g.height):
-            print(cur_x, cur_y, "IN WHILE")
             is_adjacent = False
             this_cell = g.GetCell(cur_x, cur_y)
             this_cell_val = (4 / this_cell.takeTime)
@@ -75,7 +74,6 @@ if __name__ == '__main__':
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-
 
             if not this_cell.owner == g.uid:
                 neighbors = set()
@@ -111,9 +109,8 @@ if __name__ == '__main__':
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 3.3
-
-                now = datetime.datetime.now()
-                timedelta = (now - last_attack_time).total_seconds()
+                else:
+                    this_cell_val -= (this_cell.takeTime * 3)
 
             if this_cell_val > highest_val and is_adjacent and not this_cell.owner == g.uid:
                 highest_val = this_cell_val

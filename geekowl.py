@@ -153,7 +153,8 @@ if __name__ == '__main__':
 
         now = datetime.datetime.now()
         timedelta = (now - last_attack_time).total_seconds()
-        if (now - last_attack_time).total_seconds() > 2.0 and (highest_val_coor) != last_attack_cell:
+        if (now - last_attack_time).total_seconds() > 1.0 and (highest_val_coor) != last_attack_cell:
+            if not g.GetCell(highest_val_coor[0][1]).isTaking:
                 print(g.AttackCell(highest_val_coor[0], highest_val_coor[1]), "x-value", highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
                 print("highest val", highest_val)

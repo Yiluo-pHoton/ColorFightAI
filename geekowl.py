@@ -50,8 +50,8 @@ if __name__ == '__main__':
 
     def eval_this_cell_global(cur_x, cur_y):
         this_cell_global_val = 0
-        for x in range(cur_x - 4, cur_x + 4):
-            for y in range(cur_y - 4, cur_y + 4):
+        for x in range(cur_x - 3, cur_x + 3):
+            for y in range(cur_y - 3, cur_y + 3):
                 this_cell = g.GetCell(x, y)
                 neighbors = set()
 
@@ -108,10 +108,10 @@ if __name__ == '__main__':
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
-                    for i in range(5):
+                    for i in range(3):
                         dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
                         if  dist < pre_dist_to_global_high:
-                            this_cell_val += 14 * math.e ** (- 0.1 * (dist - 8) ** 2)
+                            this_cell_val += 10 * math.e ** (- 0.1 * (dist - 8) ** 2)
                             pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells

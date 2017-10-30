@@ -18,8 +18,9 @@ class CellStatus:
 
 
 if __name__ == '__main__':
-    ACTION_ARRAY = [Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.EVAL,
-                    Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.SORT]
+    ACTION_ARRAY = [Actions.EVAL, Actions.SORT,
+                    Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.DO_NOTHING,
+                    Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.DO_NOTHING, Actions.DO_NOTHING]
     action_index = 0
     current_action = ACTION_ARRAY[action_index]
     evaled_cells = {}
@@ -54,13 +55,14 @@ if __name__ == '__main__':
                 this_cell = g.GetCell(x, y)
                 neighbors = set()
 
-                if this_cell.owner != g.uid:
-                    if this_cell.owner == 0:
-                        this_cell_global_val -= 2
-                    else:
-                        if this_cell.owner in neighbors:
-                            this_cell_global_val += 1
-                        this_cell_global_val -= this_cell.takeTime
+                if this_cell != None:
+                    if this_cell.owner != g.uid:
+                        if this_cell.owner == 0:
+                            this_cell_global_val -= 2
+                        else:
+                            if this_cell.owner in neighbors:
+                                this_cell_global_val += 1
+                            this_cell_global_val -= this_cell.takeTime
         evaled_cells[(cur_x, cur_y)] = this_cell_global_val
 
     def sort_all_eval():
@@ -68,7 +70,7 @@ if __name__ == '__main__':
 
     while True:
         # This is the step to sort from high to low the value of cells
-        elif current_action == Actions.SORT:
+        if current_action == Actions.SORT:
             sort_all_eval()
 
         # Now carry out the attack
@@ -98,10 +100,11 @@ if __name__ == '__main__':
 
             if not this_cell.owner == g.uid:
                 neighbors = set()
-                for i in range(5):
-                    dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
-                    if  dist < pre_dist_to_global_high:
-                        this_cell_val += 4 * math.e ** (- 0.1 * (dist - 8) ** 2)
+                if current_action == Actions.DO_NOTHING:
+                    for i in range(5):
+                        dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
+                        if  dist < pre_dist_to_global_high:
+                            this_cell_val += 4 * math.e ** (- 0.1 * (dist - 8) ** 2)
                             pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells

@@ -63,6 +63,8 @@ if __name__ == '__main__':
                             if this_cell.owner in neighbors:
                                 this_cell_global_val += 1
                             this_cell_global_val -= this_cell.takeTime
+                    if this_cell.cellType == "gold":
+                        this_cell_global_val += 4
                 else:
                     this_cell_global_val += 4
         evaled_cells[(cur_x, cur_y)] = this_cell_global_val
@@ -114,6 +116,8 @@ if __name__ == '__main__':
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
+                    if this_cell.cellType == "gold" and this_cell.takeTime < 12:
+                        this_cell_val += 8
                     if not sur_c == None:
                         if sur_c.owner == g.uid:
                             is_adjacent = True
@@ -128,6 +132,8 @@ if __name__ == '__main__':
                     else:
                         this_cell_val += 2
                 for i in diagonal_dirs:
+                    if this_cell.cellType == "gold" and this_cell.takeTime < 12:
+                        this_cell_val += 8
                     # Diagonally adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
                     if not sur_c == None:

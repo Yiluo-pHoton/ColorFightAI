@@ -71,6 +71,7 @@ if __name__ == '__main__':
         sorted_cells = sorted(evaled_cells, key=evaled_cells.get, reverse=True)
 
     while True:
+            print("while")
         # This is the step to sort from high to low the value of cells
         if current_action == Actions.SORT:
             sort_all_eval()

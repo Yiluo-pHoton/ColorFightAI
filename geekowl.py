@@ -111,7 +111,7 @@ if __name__ == '__main__':
                     for i in range(3):
                         dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
                         if  dist < pre_dist_to_global_high:
-                            this_cell_val += 10 * math.e ** (- 0.1 * (dist - 8) ** 2)
+                            this_cell_val += 6 * math.e ** (- 0.1 * (dist - 8) ** 2)
                             pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells

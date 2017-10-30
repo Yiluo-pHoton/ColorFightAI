@@ -102,7 +102,7 @@ if __name__ == '__main__':
             else:
                 this_cell_val -= this_cell.takeTime / 3
             if this_cell.cellType == "gold" and this_cell.takeTime < 12:
-                this_cell_val += 6
+                this_cell_val += 8
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                             this_cell_val += (4 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
-                        this_cell_val += 3.3
+                        this_cell_val += 2
                 for i in diagonal_dirs:
                     # Diagonally adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                             this_cell_val += (3 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
-                        this_cell_val += 3.3
+                        this_cell_val += 2
                 else:
                     this_cell_val -= (this_cell.takeTime * 3)
                     my_coor += [(cur_x, cur_y)]

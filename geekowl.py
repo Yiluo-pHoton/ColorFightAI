@@ -64,7 +64,7 @@ if __name__ == '__main__':
                                 this_cell_global_val += 1
                             this_cell_global_val -= this_cell.takeTime
                     if this_cell.cellType == "gold":
-                        this_cell_global_val += 4
+                        this_cell_global_val += 6
                 else:
                     this_cell_global_val += 4
         evaled_cells[(cur_x, cur_y)] = this_cell_global_val
@@ -168,12 +168,12 @@ if __name__ == '__main__':
 
         now = datetime.datetime.now()
         timedelta = (now - last_attack_time).total_seconds()
-        if (now - last_attack_time).total_seconds() > 1.0 and (highest_val_coor) != last_attack_cell:
+        if (now - last_attack_time).total_seconds() > 0.5 and (highest_val_coor) != last_attack_cell:
             if not g.GetCell(highest_val_coor[0], highest_val_coor[1]).isTaking:
                 print(g.AttackCell(highest_val_coor[0], highest_val_coor[1]), "x-value", highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
-        elif (now - last_attack_time).total_seconds() > 1.0 and (sec_highest_val_coor) != last_attack_cell:
+        elif (now - last_attack_time).total_seconds() > 0.5 and (sec_highest_val_coor) != last_attack_cell:
             if not g.GetCell(sec_highest_val_coor[0], sec_highest_val_coor[1]).isTaking:
                 print(g.AttackCell(sec_highest_val_coor[0], sec_highest_val_coor[1]), "x-value", sec_highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()

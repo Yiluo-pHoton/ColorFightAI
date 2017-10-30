@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-    g.JoinGame('geekowl')
+    g.JoinGame('bubo')
     # Put you logic in a while True loop so it will run forever until you
     # manually stop the game
 

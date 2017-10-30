@@ -133,11 +133,12 @@ if __name__ == '__main__':
                     else:
                         this_cell_val += 2
                 for i in diagonal_dirs:
-                    if sur_c.cellType == "gold" and this_cell.takeTime < 12:
-                        this_cell_val += 8
+
                     # Diagonally adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
                     if not sur_c == None:
+                        if sur_c.cellType == "gold" and this_cell.takeTime < 12:
+                            this_cell_val += 8
                         if sur_c.owner == 0:
                             this_cell_val += 1
                         elif sur_c.owner == g.uid:

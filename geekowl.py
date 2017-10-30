@@ -116,9 +116,10 @@ if __name__ == '__main__':
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
-                    if sur_c.cellType == "gold" and this_cell.takeTime < 12:
-                        this_cell_val += 8
+
                     if not sur_c == None:
+                        if sur_c.cellType == "gold" and this_cell.takeTime < 12:
+                            this_cell_val += 8
                         if sur_c.owner == g.uid:
                             is_adjacent = True
                             this_cell_val += ((g.currTime - sur_c.occupyTime) / 40)

@@ -99,7 +99,8 @@ if __name__ == '__main__':
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-
+            if this_cell.cellType == gold and this_cell.takeTime < 12:
+                this_cell_val += 6
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
@@ -156,7 +157,7 @@ if __name__ == '__main__':
         now = datetime.datetime.now()
         timedelta = (now - last_attack_time).total_seconds()
         if (now - last_attack_time).total_seconds() > 1.0 and (highest_val_coor) != last_attack_cell:
-            if not g.GetCell(highest_val_coor[0][1]).isTaking:
+            if not g.GetCell(highest_val_coor[0], highest_val_coor[1]).isTaking:
                 last_attack_time = datetime.datetime.now()
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
 

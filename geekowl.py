@@ -111,12 +111,12 @@ if __name__ == '__main__':
                     for i in range(5):
                         dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
                         if  dist < pre_dist_to_global_high:
-                            this_cell_val += 4 * math.e ** (- 0.1 * (dist - 8) ** 2)
+                            this_cell_val += 7 * math.e ** (- 0.1 * (dist - 8) ** 2)
                             pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
-                    if this_cell.cellType == "gold" and this_cell.takeTime < 12:
+                    if sur_c.cellType == "gold" and this_cell.takeTime < 12:
                         this_cell_val += 8
                     if not sur_c == None:
                         if sur_c.owner == g.uid:
@@ -132,7 +132,7 @@ if __name__ == '__main__':
                     else:
                         this_cell_val += 2
                 for i in diagonal_dirs:
-                    if this_cell.cellType == "gold" and this_cell.takeTime < 12:
+                    if sur_c.cellType == "gold" and this_cell.takeTime < 12:
                         this_cell_val += 8
                     # Diagonally adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])

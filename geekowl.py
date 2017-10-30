@@ -43,8 +43,9 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-
     g.JoinGame('geekowl')
+    # Put you logic in a while True loop so it will run forever until you
+    # manually stop the game
 
     def eval_this_cell_global(cur_x, cur_y):
         this_cell_global_val = 0
@@ -101,7 +102,7 @@ if __name__ == '__main__':
                     dist = abs(sorted_cells[i][0] - cur_x) + abs(sorted_cells[i][1])
                     if  dist < pre_dist_to_global_high:
                         this_cell_val += 4 * math.e ** (- 0.1 * (dist - 8) ** 2)
-                        pre_dist_to_global_high = dist
+                            pre_dist_to_global_high = dist
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])

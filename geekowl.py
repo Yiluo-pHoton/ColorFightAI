@@ -99,7 +99,7 @@ if __name__ == '__main__':
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-            if this_cell.cellType == gold and this_cell.takeTime < 12:
+            if this_cell.cellType == "gold" and this_cell.takeTime < 12:
                 this_cell_val += 6
             if not this_cell.owner == g.uid:
                 neighbors = set()

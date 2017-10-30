@@ -50,8 +50,8 @@ if __name__ == '__main__':
 
     def eval_this_cell_global(cur_x, cur_y):
         this_cell_global_val = 0
-        for x in range(cur_x - 3, cur_x + 3):
-            for y in range(cur_y - 3, cur_y + 3):
+        for x in range(cur_x - 4, cur_x + 4):
+            for y in range(cur_y - 4, cur_y + 4):
                 this_cell = g.GetCell(x, y)
                 neighbors = set()
 
@@ -63,6 +63,8 @@ if __name__ == '__main__':
                             if this_cell.owner in neighbors:
                                 this_cell_global_val += 1
                             this_cell_global_val -= this_cell.takeTime
+                else:
+                    this_cell_global_val += 4
         evaled_cells[(cur_x, cur_y)] = this_cell_global_val
 
     def sort_all_eval():
@@ -155,9 +157,7 @@ if __name__ == '__main__':
         timedelta = (now - last_attack_time).total_seconds()
         if (now - last_attack_time).total_seconds() > 1.0 and (highest_val_coor) != last_attack_cell:
             if not g.GetCell(highest_val_coor[0][1]).isTaking:
-                print(g.AttackCell(highest_val_coor[0], highest_val_coor[1]), "x-value", highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
-                print("highest val", highest_val)
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
 
         action_index = (action_index + 1) % 2

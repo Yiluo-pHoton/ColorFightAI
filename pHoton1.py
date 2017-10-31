@@ -61,6 +61,8 @@ if __name__ == '__main__':
         # (since this is highest value possible)
         highest_val = float('-inf')
         highest_val_coor = (0, 0)
+        sec_highest_val = float('-inf')
+        sec_highest_val_coor = (0, 0)
         cur_x = 0
         cur_y = 0
         direct_dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]]
@@ -115,6 +117,9 @@ if __name__ == '__main__':
             if this_cell_val > highest_val and is_adjacent and not this_cell.owner == g.uid:
                 highest_val = this_cell_val
                 highest_val_coor = (cur_x, cur_y)
+            elif this_cell_val < highest_val and this_cell_val > sec_highest_val and is_adjacent and not this_cell.owner == g.uid:
+                sec_highest_val = this_cell_val
+                sec_highest_val_coor = (cur_x, cur_y)
 
             # Update coordinate
             temp_x = cur_x
@@ -123,11 +128,16 @@ if __name__ == '__main__':
 
         now = datetime.datetime.now()
         timedelta = (now - last_attack_time).total_seconds()
-        if (now - last_attack_time).total_seconds() > 2.0 and (highest_val_coor) != last_attack_cell:
+        if (now - last_attack_time).total_seconds() > 0.5 and (highest_val_coor) != last_attack_cell:
+            if not g.GetCell(highest_val_coor[0], highest_val_coor[1]).isTaking:
                 print(g.AttackCell(highest_val_coor[0], highest_val_coor[1]), "x-value", highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
-                print("highest val", highest_val)
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
+        elif (now - last_attack_time).total_seconds() > 0.5 and (sec_highest_val_coor) != last_attack_cell:
+            if not g.GetCell(sec_highest_val_coor[0], sec_highest_val_coor[1]).isTaking:
+                print(g.AttackCell(sec_highest_val_coor[0], sec_highest_val_coor[1]), "x-value", sec_highest_val_coor[0], "y-value", highest_val_coor[1])
+                last_attack_time = datetime.datetime.now()
+                last_attack_cell = (sec_highest_val_coor[0], sec_highest_val_coor[1])
 
         action_index = (action_index + 1) % 2
         current_action = ACTION_ARRAY[action_index]

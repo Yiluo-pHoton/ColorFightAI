@@ -76,13 +76,16 @@ if __name__ == '__main__':
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-
+            if this_cell.cellType == "gold" and this_cell.takeTime < 12:
+                this_cell_val += 10
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 for i in direct_dirs:
                     # Directly adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
                     if not sur_c == None:
+                        if sur_c.cellType == "gold" and this_cell.takeTime < 12:
+                            this_cell_val += 8
                         if sur_c.owner == g.uid:
                             is_adjacent = True
                             this_cell_val += ((g.currTime - sur_c.occupyTime) / 30)
@@ -100,6 +103,8 @@ if __name__ == '__main__':
                     # Diagonally adjacent cells
                     sur_c = g.GetCell(cur_x + i[0], cur_y + i[1])
                     if not sur_c == None:
+                        if sur_c.cellType == "gold" and this_cell.takeTime < 12:
+                            this_cell_val += 6
                         if sur_c.owner == 0:
                             this_cell_val += 1
                         elif sur_c.owner == g.uid:

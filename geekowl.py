@@ -72,6 +72,11 @@ if __name__ == '__main__':
     def sort_all_eval():
         sorted_cells = sorted(evaled_cells, key=evaled_cells.get, reverse=True)
 
+    def get_highest_user():
+        users = g.users
+        winner = sorted(users)
+        print(winner)
+    get_highest_user()
     while True:
         # This is the step to sort from high to low the value of cells
         if current_action == Actions.SORT:

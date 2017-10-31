@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-    g.JoinGame('bubo_4_enemy')
+    g.JoinGame('bubo_6_enemy')
     # Put you logic in a while True loop so it will run forever until you
     # manually stop the game
 
@@ -130,7 +130,7 @@ if __name__ == '__main__':
                             this_cell_val += 2
                         else:
                             if sur_c.owner in neighbors:
-                                this_cell_val += (4 / sur_c.takeTime)
+                                this_cell_val += (6 / sur_c.takeTime)
                             this_cell_val += (4 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
@@ -158,7 +158,7 @@ if __name__ == '__main__':
                     my_coor += [(cur_x, cur_y)]
 
             this_cell_val += num_my_cell
-            
+
             if this_cell_val > highest_val and is_adjacent and not this_cell.owner == g.uid:
                 highest_val = this_cell_val
                 highest_val_coor = (cur_x, cur_y)

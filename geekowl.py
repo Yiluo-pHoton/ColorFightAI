@@ -129,7 +129,7 @@ if __name__ == '__main__':
                             this_cell_val += 8
                         if sur_c.owner == g.uid:
                             is_adjacent = True
-                            this_cell_val += ((g.currTime - sur_c.occupyTime) / 40)
+                            this_cell_val += ((g.currTime - sur_c.occupyTime) / 60)
                             num_my_cell += 1
                         elif sur_c.owner == 0:
                             this_cell_val += 2

@@ -16,6 +16,10 @@ class CellStatus:
     OCCUPIED_LOW = 1
     OCCUPIED_HIGH = -1
 
+class Modes:
+    ATTACK = 0
+    DEFEND = 1
+    FILL = 2
 
 if __name__ == '__main__':
     ACTION_ARRAY = [Actions.EVAL, Actions.SORT,
@@ -28,6 +32,7 @@ if __name__ == '__main__':
     pre_dist_to_global_high = 60
     cur_dist_to_global_high = 60
 
+    log_highest_coor = []
     # Last attacked cell information
     last_attack_time = datetime.datetime.now()
     last_attack_cell = ()
@@ -44,29 +49,26 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-    g.JoinGame('bubo_14_en')
+    g.JoinGame('bubo_16_en')
     # Put you logic in a while True loop so it will run forever until you
     # manually stop the game
 
     def eval_this_cell_global(cur_x, cur_y):
         this_cell_global_val = 0
-        for x in range(cur_x - 3, cur_x + 3):
-            for y in range(cur_y - 3, cur_y + 3):
+        for x in range(cur_x - 2, cur_x + 2):
+            for y in range(cur_y - 2, cur_y + 2):
                 this_cell = g.GetCell(x, y)
-                neighbors = set()
 
                 if this_cell != None:
                     if this_cell.owner != g.uid:
                         if this_cell.owner == 0:
                             this_cell_global_val -= 2
                         else:
-                            if this_cell.owner in neighbors:
-                                this_cell_global_val += 1
                             this_cell_global_val -= this_cell.takeTime
                     if this_cell.cellType == "gold":
                         this_cell_global_val += 6
                 else:
-                    this_cell_global_val += 4
+                    this_cell_global_val += 2
         evaled_cells[(cur_x, cur_y)] = this_cell_global_val
 
     def sort_all_eval():
@@ -86,6 +88,8 @@ if __name__ == '__main__':
         highest_val_coor = (0, 0)
         sec_highest_val = float('-inf')
         sec_highest_val_coor = (0, 0)
+        thir_highest_val = float('-inf')
+        thir_highest_val_coor = (0, 0)
         cur_x = 0
         cur_y = 0
         direct_dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]]
@@ -98,13 +102,13 @@ if __name__ == '__main__':
 
             is_adjacent = False
             this_cell = g.GetCell(cur_x, cur_y)
-            this_cell_val = (4 / this_cell.takeTime)
+            this_cell_val = (6 / this_cell.takeTime)
             if this_cell.owner == 0:
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-            if this_cell.cellType == "gold" and this_cell.takeTime < 12:
-                this_cell_val += 10
+            if this_cell.cellType == "gold" and this_cell.takeTime < 14:
+                this_cell_val += 12
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
@@ -127,7 +131,7 @@ if __name__ == '__main__':
                             this_cell_val += ((g.currTime - sur_c.occupyTime) / 60)
                             num_my_cell += 1
                         elif sur_c.owner == 0:
-                            this_cell_val += 2
+                            this_cell_val += 1
                         else:
                             if sur_c.owner in neighbors:
                                 this_cell_val += (14 / sur_c.takeTime)
@@ -146,10 +150,11 @@ if __name__ == '__main__':
                             this_cell_val += 1
                         elif sur_c.owner == g.uid:
                             this_cell_val += 3
+                            num_my_cell += 1
                         else:
                             if sur_c.owner in neighbors:
                                 this_cell_val += (2 / sur_c.takeTime)
-                            this_cell_val += (3 / sur_c.takeTime)
+                            this_cell_val += (2 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 2
@@ -157,7 +162,7 @@ if __name__ == '__main__':
                     this_cell_val -= (this_cell.takeTime * 3)
                     my_coor += [(cur_x, cur_y)]
 
-            this_cell_val += num_my_cell
+            this_cell_val += ((2 / this_cell.takeTime) * num_my_cell ** 3)
 
             if this_cell_val > highest_val and is_adjacent and not this_cell.owner == g.uid:
                 highest_val = this_cell_val
@@ -165,6 +170,9 @@ if __name__ == '__main__':
             elif this_cell_val < highest_val and this_cell_val > sec_highest_val and is_adjacent and not this_cell.owner == g.uid:
                 sec_highest_val = this_cell_val
                 sec_highest_val_coor = (cur_x, cur_y)
+            elif this_cell_val < sec_highest_val and this_cell_val > thir_highest_val and is_adjacent and not this_cell.owner == g.uid:
+                thir_highest_val = this_cell_val
+                thir_highest_val_coor = (cur_x, cur_y)
 
             # Update coordinate
             temp_x = cur_x
@@ -173,16 +181,21 @@ if __name__ == '__main__':
 
         now = datetime.datetime.now()
         timedelta = (now - last_attack_time).total_seconds()
-        if (now - last_attack_time).total_seconds() > 0.5 and (highest_val_coor) != last_attack_cell:
+        if (highest_val_coor) != last_attack_cell:
             if not g.GetCell(highest_val_coor[0], highest_val_coor[1]).isTaking:
                 print(g.AttackCell(highest_val_coor[0], highest_val_coor[1]), "x-value", highest_val_coor[0], "y-value", highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
                 last_attack_cell = (highest_val_coor[0], highest_val_coor[1])
-        elif (now - last_attack_time).total_seconds() > 0.5 and (sec_highest_val_coor) != last_attack_cell:
+        elif (sec_highest_val_coor) != last_attack_cell:
             if not g.GetCell(sec_highest_val_coor[0], sec_highest_val_coor[1]).isTaking:
-                print(g.AttackCell(sec_highest_val_coor[0], sec_highest_val_coor[1]), "x-value", sec_highest_val_coor[0], "y-value", highest_val_coor[1])
+                print(g.AttackCell(sec_highest_val_coor[0], sec_highest_val_coor[1]), "x-value", sec_highest_val_coor[0], "y-value", sec_highest_val_coor[1])
                 last_attack_time = datetime.datetime.now()
                 last_attack_cell = (sec_highest_val_coor[0], sec_highest_val_coor[1])
+        elif (thir_highest_val_coor) != last_attack_cell:
+            if not g.GetCell(thir_highest_val_coor[0], thir_highest_val_coor[1]).isTaking:
+                print(g.AttackCell(thir_highest_val_coor[0], thir_highest_val_coor[1]), "x-value", sec_highest_val_coor[0], "y-value", thir_highest_val_coor[1])
+                last_attack_time = datetime.datetime.now()
+                last_attack_cell = (thir_highest_val_coor[0], thir_highest_val_coor[1])
 
         action_index = (action_index + 1) % 2
         current_action = ACTION_ARRAY[action_index]

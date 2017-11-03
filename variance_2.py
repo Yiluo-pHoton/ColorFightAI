@@ -16,6 +16,10 @@ class CellStatus:
     OCCUPIED_LOW = 1
     OCCUPIED_HIGH = -1
 
+class Modes:
+    ATTACK = 0
+    DEFEND = 1
+    FILL = 2
 
 if __name__ == '__main__':
     ACTION_ARRAY = [Actions.EVAL, Actions.SORT,

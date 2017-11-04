@@ -107,8 +107,8 @@ if __name__ == '__main__':
                 this_cell_val += 1
             else:
                 this_cell_val -= this_cell.takeTime / 3
-            if this_cell.cellType == "gold" and this_cell.takeTime < 14:
-                this_cell_val += 12
+            if this_cell.cellType == "gold" and this_cell.takeTime < 10:
+                this_cell_val += 10
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
@@ -129,12 +129,12 @@ if __name__ == '__main__':
                         if sur_c.owner == g.uid:
                             is_adjacent = True
                             this_cell_val += ((g.currTime - sur_c.occupyTime) / 60)
-                            num_my_cell += 1
+                            num_my_cell += 2
                         elif sur_c.owner == 0:
-                            this_cell_val += 1
+                            this_cell_val += 2
                         else:
                             if sur_c.owner in neighbors:
-                                this_cell_val += (14 / sur_c.takeTime)
+                                this_cell_val += (10 / sur_c.takeTime)
                             this_cell_val += (4 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
@@ -153,8 +153,8 @@ if __name__ == '__main__':
                             num_my_cell += 1
                         else:
                             if sur_c.owner in neighbors:
-                                this_cell_val += (2 / sur_c.takeTime)
-                            this_cell_val += (2 / sur_c.takeTime)
+                                this_cell_val += (8 / sur_c.takeTime)
+                            this_cell_val += (4 / sur_c.takeTime)
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 2

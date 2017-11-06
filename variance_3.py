@@ -3,6 +3,7 @@ import colorfight
 import random
 import datetime
 import math
+import copy
 
 class Actions:
     DO_NOTHING = 0
@@ -49,12 +50,20 @@ if __name__ == '__main__':
     # stop your AI and continue from the last time you quit.
     # If there's a token and the token is valid, JoinGame() will continue. If
     # not, you will join as a new player.
-    g.JoinGame('bubo_14')
+    g.JoinGame('geekowl')
     # Put you logic in a while True loop so it will run forever until you
     # manually stop the game
 
+
+    def get_ranking(user_id):
+        sorted_users = copy.deepcopy(g.users)
+        sorted_users.sort(key=lambda x: x.cellNum)
+        user_ranking = [u.id for u in sorted_users]
+        return user_ranking.index(user_id) + 1
+
     def eval_this_cell_global(cur_x, cur_y):
         this_cell_global_val = 0
+
         for x in range(cur_x - 2, cur_x + 2):
             for y in range(cur_y - 2, cur_y + 2):
                 this_cell = g.GetCell(x, y)
@@ -65,6 +74,7 @@ if __name__ == '__main__':
                             this_cell_global_val -= 2
                         else:
                             this_cell_global_val -= this_cell.takeTime
+                            this_cell_global_val += (8 / get_ranking(this_cell.owner))
                     if this_cell.cellType == "gold":
                         this_cell_global_val += 6
                 else:
@@ -109,6 +119,8 @@ if __name__ == '__main__':
                 this_cell_val -= this_cell.takeTime / 3
             if this_cell.cellType == "gold" and this_cell.takeTime < 10:
                 this_cell_val += 10
+            if this_cell.isBase():
+                this_cell_val += 8
             if not this_cell.owner == g.uid:
                 neighbors = set()
                 if current_action == Actions.DO_NOTHING:
@@ -135,7 +147,10 @@ if __name__ == '__main__':
                         else:
                             if sur_c.owner in neighbors:
                                 this_cell_val += (10 / sur_c.takeTime)
-                            this_cell_val += (4 / sur_c.takeTime)
+                            this_cell_val += (2 / sur_c.takeTime)
+                            this_cell_val += (8 / get_ranking(sur_c.owner))\
+                            if sur_c.isBaser():
+                                this_cell_val += 10
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 2
@@ -155,6 +170,9 @@ if __name__ == '__main__':
                             if sur_c.owner in neighbors:
                                 this_cell_val += (8 / sur_c.takeTime)
                             this_cell_val += (4 / sur_c.takeTime)
+                            this_cell_val += (6 / get_ranking(sur_c.owner))
+                            if sur_c.isBaser():
+                                this_cell_val += 8
                             neighbors.add(sur_c.owner)
                     else:
                         this_cell_val += 2

@@ -26,6 +26,8 @@ class Cell:
         self.finishTime = cellData['f']
         if 'ct' in cellData:
             self.cellType = cellData['ct']
+        if 'b' in cellData:
+            self.isBase = cellData['b']
 
     def __repr__(self):
         s = ""
@@ -47,6 +49,8 @@ class User:
         self.name       = userData['name']
         self.cdTime     = userData['cd_time']
         self.cellNum    = userData['cell_num']
+        if 'energy' in userData:
+            self.energy = userData['energy']
     
     def __repr__(self):
         return "uid: {}\nname: {}\ncd time: {}\ncell number: {}\n".format(self.id, self.name, self.cdTime, self.cellNum)
@@ -59,9 +63,12 @@ class Game:
         self.uid   = -1
         self.endTime = 0
         self.users = []
+        self.cellNum = 0
+        self.cdTime = 0
+        self.energy = 0
         self.Refresh()
 
-    def JoinGame(self, name, force = False):
+    def JoinGame(self, name, password = None, force = False):
         if type(name) != str:
             print("Your name has to be a string!")
             return False
@@ -76,13 +83,19 @@ class Game:
                         return True
     
         headers = {'content-type': 'application/json'}
-        r = requests.post(hostUrl + 'joingame', data=json.dumps({'name':name}), headers = headers)
-        data = r.json()
-        with open('token', 'w') as f:
-            f.write(data['token'] + '\n')
-        self.token = data['token']
-        self.uid   = data['uid']
-        self.Refresh()
+        data = {'name':name}
+        if password != None:
+            data['password'] = password
+        r = requests.post(hostUrl + 'joingame', data=json.dumps(data), headers = headers)
+        if r.status_code == 200:
+            data = r.json()
+            with open('token', 'w') as f:
+                f.write(data['token'] + '\n')
+            self.token = data['token']
+            self.uid   = data['uid']
+            self.Refresh()
+        else:
+            return False
 
         return True
 
@@ -101,6 +114,21 @@ class Game:
         else:
             return False, None, "You need to join the game first!"
 
+    def BuildBase(self, x, y):
+        if self.token != '':
+            headers = {'content-type': 'application/json'}
+            r = requests.post(hostUrl + 'buildbase', data=json.dumps({'cellx':x, 'celly':y, 'token':self.token}), headers = headers)
+            if r.status_code == 200:
+                data = r.json()
+                if data['err_code'] == 0:
+                    return True, None, None
+                else:
+                    return False, data['err_code'], data['err_msg']
+            else:
+                return False, None, "Server did not return correctly, status_code ", r.status_code
+        else:
+            return False, None, "You need to join the game first!"
+
 
     def GetCell(self,x,y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -114,7 +142,12 @@ class Game:
     def RefreshUsers(self, usersData):
         self.users = []
         for userData in usersData:
-            self.users.append(User(userData))
+            u = User(userData)
+            self.users.append(u)
+            if u.id == self.uid:
+                self.energy = u.energy
+                self.cdTime = u.cdTime
+                self.cellNum = u.cellNum
     def Refresh(self):
         headers = {'content-type': 'application/json'}
         if self.data == None:

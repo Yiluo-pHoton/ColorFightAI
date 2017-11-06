@@ -149,7 +149,7 @@ if __name__ == '__main__':
                                 this_cell_val += (10 / sur_c.takeTime)
                             this_cell_val += (2 / sur_c.takeTime)
                             this_cell_val += (8 / get_ranking(sur_c.owner))\
-                            if sur_c.isBaser():
+                            if sur_c.isBase():
                                 this_cell_val += 10
                             neighbors.add(sur_c.owner)
                     else:
@@ -171,7 +171,7 @@ if __name__ == '__main__':
                                 this_cell_val += (8 / sur_c.takeTime)
                             this_cell_val += (4 / sur_c.takeTime)
                             this_cell_val += (6 / get_ranking(sur_c.owner))
-                            if sur_c.isBaser():
+                            if sur_c.isBase():
                                 this_cell_val += 8
                             neighbors.add(sur_c.owner)
                     else:
